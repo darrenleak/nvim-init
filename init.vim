@@ -19,6 +19,8 @@ Plug 'kyazdani42/nvim-web-devicons'
 Plug 'https://github.com/vim-airline/vim-airline'
 Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
 Plug 'nvim-treesitter/playground'
+Plug 'APZelos/blamer.nvim'
+Plug 'dominikduda/vim_current_word'
 
 call plug#end()
 
@@ -43,11 +45,15 @@ set hidden
 set noerrorbells
 set nowrap
 set incsearch
-set scrolloff=8
+set scrolloff=10
 set colorcolumn=80
 set signcolumn=yes
 set completeopt=menu,menuone,noselect
 set mouse=a
+set hidden
+
+let g:blamer_enabled = 1
+let g:blamer_delay = 0
 
 "Language servers
 
@@ -63,6 +69,7 @@ require'lspconfig'.rust_analyzer.setup{}
 EOF
 
 "Commands
+let mapleader = " "
 nnoremap <leader>vd :lua vim.lsp.buf.definition()<CR>
 nnoremap <leader>vi :lua vim.lsp.buf.implementation()<CR>
 nnoremap <leader>vsh :lua vim.lsp.buf.signature_help()<CR>
@@ -74,7 +81,6 @@ nnoremap <leader>vn :lua vim.lsp.buf.goto_next()<CR>
 nnoremap <leader>vp :lua vim.lsp.buf.goto_previous()<CR>
 
 " Telescope commands
-let mapleader = " "
 nnoremap <leader>pf :lua require('telescope.builtin').find_files()<cr>
 nnoremap <leader>ps :lua require('telescope.builtin').grep_string({ search = vim.fn.input("Grep for > ")})<CR>
 nnoremap <leader>ph :lua require('telescope.builtin').help_tags()<cr>
@@ -115,7 +121,7 @@ lua <<EOF
     sources = cmp.config.sources({
       { name = 'nvim_lsp' },
       { name = "path" },
-      -- { name = "buffer", keyword_length = 5 },
+      { name = "buffer", keyword_length = 3 },
     }, {
       { name = 'buffer' },
     }), 
@@ -156,14 +162,3 @@ lua << EOF
 
   require('telescope').load_extension('fzy_native')
 EOF
-
-
-
-
-
-
-
-
-
-
-
