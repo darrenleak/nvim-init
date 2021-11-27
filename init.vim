@@ -2,13 +2,12 @@
 call plug#begin()
 
 Plug 'neovim/nvim-lspconfig'
-Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-cmdline'
-Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/nvim-cmp'
+
 Plug 'morhetz/gruvbox'
 Plug 'sainnhe/edge'
 Plug 'nvim-lua/popup.nvim'
@@ -21,13 +20,17 @@ Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
 Plug 'nvim-treesitter/playground'
 Plug 'APZelos/blamer.nvim'
 Plug 'dominikduda/vim_current_word'
+Plug 'arzg/vim-colors-xcode'
+Plug 'simrat39/rust-tools.nvim'
+Plug 'folke/trouble.nvim'  
 
 call plug#end()
 
 "Color schemes
-colorscheme edge 
+colorscheme xcodelight
+set termguicolors
 syntax on
-set background=light
+" set background=light
 
 "Set
 set tabstop=2
@@ -43,7 +46,7 @@ set rnu
 set nohlsearch
 set hidden
 set noerrorbells
-set nowrap
+"set nowrap
 set incsearch
 set scrolloff=10
 set colorcolumn=80
@@ -54,19 +57,6 @@ set hidden
 
 let g:blamer_enabled = 1
 let g:blamer_delay = 0
-
-"Language servers
-
-lua << EOF
-require'lspconfig'.tsserver.setup{}
-require'lspconfig'.gopls.setup{}
-require'lspconfig'.jsonls.setup{}
-require'lspconfig'.eslint.setup{}
-require'lspconfig'.html.setup{}
-require'lspconfig'.cssls.setup{}
-require'lspconfig'.pyright.setup{}
-require'lspconfig'.rust_analyzer.setup{}
-EOF
 
 "Commands
 let mapleader = " "
@@ -91,6 +81,10 @@ nnoremap <leader>plg :lua require('telescope.builtin').live_grep()<cr>
 nnoremap <leader>pbr :lua require('telescope.builtin').file_browser()<cr>
 nnoremap <leader>pbb :lua require('telescope.builtin').buffers()<cr>
 
+nnoremap <leader>tdd :Trouble lsp_document_diagnostics<cr>
+nnoremap <leader>tar :Trouble lsp_references<cr>
+nnoremap <leader>tqf :Trouble quickfix<cr>
+nnoremap <leader>tll :Trouble loclist<cr>
 
 " nvim-cmp setup
 lua <<EOF
@@ -121,15 +115,30 @@ lua <<EOF
     sources = cmp.config.sources({
       { name = 'nvim_lsp' },
       { name = "path" },
-      { name = "buffer", keyword_length = 3 },
-    }, {
-      { name = 'buffer' },
+      { name = "buffer", keyword_length = 1 },
     }), 
     experimental = {
       native_menu = false,
       ghost_text = true,
     }
   })
+EOF
+
+"Language servers
+
+lua << EOF
+require'lspconfig'.tsserver.setup{}
+require'lspconfig'.gopls.setup{}
+require'lspconfig'.jsonls.setup{}
+require'lspconfig'.eslint.setup{}
+require'lspconfig'.html.setup{}
+require'lspconfig'.cssls.setup{}
+require'lspconfig'.pyright.setup{}
+require'lspconfig'.ccls.setup{}
+
+require("trouble").setup {}
+
+local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 EOF
 
 lua << EOF
